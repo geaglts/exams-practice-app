@@ -19,11 +19,10 @@ const ModalComponent = ({ isOpen, onClose }) => {
         {/* Blurred circles */}
         <div className="absolute top-1/4 left-1/4 w-40 h-40 bg-purple-400 opacity-50 rounded-full filter blur-3xl"></div>
         <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-blue-400 opacity-50 rounded-full filter blur-3xl"></div>
-
         {/* Modal content */}
         <ul>
           <li
-            className="p-4 underline text-white font-semibold"
+            className="p-4 underline text-white font-semibold cursor-pointer"
             onClick={logout}
           >
             Cerrer sesión
