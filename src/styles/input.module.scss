@@ -1,0 +1,26 @@
+.container {
+  background-color: #f6f7f9;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 4px;
+
+  &:hover {
+    outline: dotted 4px #0000003f;
+  }
+
+  .icon {
+    background-color: white;
+    color: #9d9fe6;
+    padding: 8px;
+    border-radius: 12px;
+  }
+
+  .input {
+    background-color: transparent;
+    color: #1a1a1a;
+    outline: none;
+  }
+}

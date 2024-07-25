@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { IconUserSquareRounded, IconAsterisk } from "@tabler/icons-react";
+import { Input } from "../components/Input.jsx";
 import authService from "../services/auth";
 
 export function Login() {
@@ -26,15 +28,32 @@ export function Login() {
   if (cookies.token) return null;
 
   return (
-    <form onSubmit={onSubmit}>
-      <label>
-        Usuario <input type="text" name="username" placeholder="usuario..." />
-      </label>
-      <label>
-        Contraseña{" "}
-        <input type="password" name="password" placeholder="contraseña..." />
-      </label>
-      <button>Iniciar Sesion</button>
+    <form onSubmit={onSubmit} className="p-4 grid gap-3">
+      <div>
+        <p className="text-2xl font-semibold">Bienvenido!</p>
+        <p className="text-sm text-gray-200">Es un gusto verte de regreso</p>
+      </div>
+      <Input
+        Icon={IconUserSquareRounded}
+        type="text"
+        name="username"
+        placeholder="Cual es tu usuario?"
+      />
+      <Input
+        Icon={IconAsterisk}
+        type="password"
+        name="password"
+        placeholder="Aqui pon tu contraseña"
+      />
+      <button className="button bg-pastel-purple rounded">
+        Iniciar Sesion
+      </button>
+      {/* <p className="text-center">
+        No tienes una cuenta?{" "}
+        <a className="underline text-pastel-purple" href="/register">
+          Creala Aqui
+        </a>
+      </p> */}
     </form>
   );
 }

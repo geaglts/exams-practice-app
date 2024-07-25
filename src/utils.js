@@ -47,3 +47,16 @@ export function classnames(...str) {
   if (str.length > 1) return str.filter(Boolean).join(" ");
   return str.join(" ");
 }
+
+export const getQueryParams = (keys, obj) => {
+  const queryParams = keys
+    .map((key) =>
+      obj[key] ? `${key}=${obj[key].replaceAll(" ", "%20")}` : false
+    )
+    .filter(Boolean)
+    .join("&");
+  if (queryParams.length > 0) {
+    return "?" + queryParams;
+  }
+  return "";
+};

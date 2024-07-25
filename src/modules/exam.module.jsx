@@ -5,6 +5,8 @@ import { IconSquareRoundedMinus } from "@tabler/icons-react";
 import { classnames } from "../utils";
 
 import styles from "../styles/examModule.module.scss";
+import { Toggle } from "../components/Toggle";
+import { Input } from "../components/Input";
 
 export function NewExamForm({ show }) {
   const { changeModalStatus, loadExams } = useGlobalContext();
@@ -12,6 +14,7 @@ export function NewExamForm({ show }) {
   const onSubmit = async (evt) => {
     evt.preventDefault();
     const data = Object.fromEntries(new FormData(evt.target));
+    data.isPublic = data.isPublic === "on" ? true : false;
     await examService.createOne(data);
     await loadExams();
     changeModalStatus("newExam", false)();
@@ -43,6 +46,9 @@ export function NewExamForm({ show }) {
           placeholder="Quieres ponerle alguna descripción? (Unidad 1, etc)..."
           className="custom-input"
         />
+        <Toggle label="Quieres que tu examen sea publico?">
+          <Input type="text" name="key" placeholder="Tu clave sera?..." />
+        </Toggle>
         <div
           className={classnames(
             "flex flex-col text-[#1a1a1a] gap-2",
