@@ -19,7 +19,6 @@ export function ResultForm({ question }) {
   }, []);
 
   const onClickOption = (a) => {
-    console.log(a);
     const selectedOption = selectedOptions.find((o) => o.value === a);
     if (selectedOption) {
       const updatedList = selectedOptions.filter((o) => o.value !== a);
@@ -108,7 +107,6 @@ export function ResultForm({ question }) {
 }
 
 const AnswerItem = ({ answer, option, onClick }) => {
-  console.log(option);
   const onClickOption = () => {
     onClick(answer);
   };
