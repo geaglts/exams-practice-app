@@ -6,7 +6,7 @@ import { ResultForm } from "../components/QuestionForm.jsx";
 
 import styles from "../styles/question.module.scss";
 
-import { generateQuestions, readTxt, classnames } from "../utils";
+import { generateQuestions, readTxt, classnames, shuffle } from "../utils";
 
 export function NewQuestionForm({ examId, show, reload }) {
   const { changeModalStatus } = useGlobalContext();
@@ -76,7 +76,7 @@ export function NewQuestionForm({ examId, show, reload }) {
 export function QuestionCards({ data }) {
   return (
     <section className="flex flex-col gap-3">
-      {data.map((q, index) => (
+      {shuffle(data).map((q, index) => (
         <QuestionCard question={q} index={index} key={q._id} />
       ))}
     </section>
