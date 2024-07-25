@@ -1,0 +1,30 @@
+.questions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+
+  button {
+    background-color: #4b60f9;
+    color: #020207;
+  }
+
+  button.active {
+    color: #ffffff;
+  }
+}
+
+button.correct {
+  background-color: #22c55e;
+}
+
+button.incorrect {
+  background-color: #dc2626;
+}
+
+@media (max-width: 576px) {
+  .questions {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}

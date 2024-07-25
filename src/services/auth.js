@@ -1,7 +1,7 @@
-import axios from "./axios";
+import axios from "axios";
 import toast from "react-hot-toast";
 
-const AuthService = {
+const authService = {
   async login(data) {
     try {
       const response = await axios.post("/auth/login", data);
@@ -13,4 +13,4 @@ const AuthService = {
   },
 };
 
-export default AuthService;
+export default authService;

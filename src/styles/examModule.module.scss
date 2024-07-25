@@ -1,0 +1,10 @@
+// new exam question form
+.newExamForm {
+  .buttonsContainer {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    justify-items: center;
+    color: white;
+  }
+}

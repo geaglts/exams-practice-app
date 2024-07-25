@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import AuthService from "../services/auth";
+import authService from "../services/auth";
 
 export function Login() {
   const [cookies, setCookies] = useCookies(["token"]);
@@ -16,7 +16,7 @@ export function Login() {
   const onSubmit = async (evt) => {
     evt.preventDefault();
     const data = Object.fromEntries(new FormData(evt.target));
-    const token = await AuthService.login(data);
+    const token = await authService.login(data);
     if (token) {
       setCookies("token", token);
       navigate("/dash");
