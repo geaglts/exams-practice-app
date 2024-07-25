@@ -39,21 +39,26 @@ export function Exam() {
   if (!exam) return null;
 
   return (
-    <main>
+    <main className="p-4">
+      <div className="flex justify-center">
+        <Link className="underline" to={"/dash"}>
+          Mis examenes
+        </Link>
+      </div>
       <section>
-        <h3>{exam.name}</h3>
-        <p>{exam.description}</p>
-        <button
-          onClick={changeModalStatus("newQuestion", true)}
-          className="button bg-slate-500 rounded"
-        >
-          Agregar Preguntas
-        </button>
-        <div className="flex justify-center">
-          <Link className="underline" to={"/dash"}>
-            Mis examenes
-          </Link>
+        <div className="mb-2">
+          <span className="test-sm text-gray-300">Examen</span>
+          <h3 className="text-2xl font-semibold">{exam.name}</h3>
+          <p className="test-sm text-gray-300">{exam.description}</p>
         </div>
+        {!modals.newQuestion && (
+          <button
+            onClick={changeModalStatus("newQuestion", true)}
+            className="button bg-pastel-purple rounded w-full"
+          >
+            Agregar Preguntas
+          </button>
+        )}
       </section>
       <NewQuestionForm
         examId={examId}
@@ -61,9 +66,19 @@ export function Exam() {
         reload={loadExam}
       />
       {/* Questions */}
-      <h3>Preguntas</h3>
-      {exam.questions.length === 0 && <p>Aun no hay ninguna pregunta</p>}
-      {exam.questions.length > 0 && <QuestionCards data={exam.questions} />}
+      {exam.questions.length === 0 && (
+        <p className="text-sm text-gray-500 text-center">
+          <i>Aun no hay ninguna pregunta</i>
+        </p>
+      )}
+      {exam.questions.length > 0 && (
+        <>
+          <h3 className="my-2 text-gray-300 text-center font-semibold text-sm">
+            <i>Esta son las preguntas de tu examen</i>
+          </h3>
+          <QuestionCards data={exam.questions} />
+        </>
+      )}
     </main>
   );
 }

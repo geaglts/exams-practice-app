@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { IconSquareRoundedMinus } from "@tabler/icons-react";
 import { useGlobalContext } from "../hooks/useGlobalContext";
 import questionService from "../services/question";
 import { ResultForm } from "../components/QuestionForm.jsx";
+
 import styles from "../styles/question.module.scss";
 
 import { generateQuestions, readTxt, classnames } from "../utils";
@@ -41,28 +43,31 @@ export function NewQuestionForm({ examId, show, reload }) {
   if (!show) return null;
 
   return (
-    <section className="flex items-center flex-col gap-3">
-      <h1 className="text-3xl">
-        <b>Question Form</b>
-      </h1>
-      <form className="flex flex-col w-6/12 gap-3" onSubmit={submitRequest}>
+    <section className="flex flex-col gap-2 bg-slate-100 p-3 rounded text-black mt-2">
+      <div>
+        <h1 className="text-xl font-semibold">Nuevas Preguntas</h1>
+        <p className="text-sm text-gray-400">
+          Coloca aqui tus nuevas preguntas, recuerda que cada pregunta debe
+          estar separada por <span className="underline">@-@</span>
+        </p>
+      </div>
+      <form className="flex flex-col gap-2" onSubmit={submitRequest}>
+        <div className={"text-white gap-2 grid grid-cols-[1fr_auto]"}>
+          <button className="button bg-pastel-purple rounded w-full">
+            Agregar
+          </button>
+          <button onClick={closeModal}>
+            <IconSquareRoundedMinus color="#fa5757" />
+          </button>
+        </div>
         <input type="file" name="fileIn" onChange={onLoadFile} accept=".txt" />
         <textarea
           name="questionsTa"
           placeholder="Ingresa tus preguntas aqui"
-          className="p-3 rounded h-96 resize-none text-black"
+          className="p-3 rounded h-72 resize-none"
           value={questionsText}
           onChange={onChangeQuestions}
         ></textarea>
-        <div className="flex items-center justify-center gap-2">
-          <button className=" button bg-blue-600 rounded w-40">Agregar</button>
-          <button
-            className=" button bg-blue-600 rounded w-40"
-            onClick={closeModal}
-          >
-            Cancelar
-          </button>
-        </div>
       </form>
     </section>
   );
@@ -80,7 +85,12 @@ export function QuestionCards({ data }) {
 
 function QuestionCard({ question }) {
   return (
-    <section className={classnames(styles.questionContainer, "rounded")}>
+    <section
+      className={classnames(
+        styles.questionContainer,
+        "rounded bg-slate-100 text-slate-800 font-semibold"
+      )}
+    >
       <p className="text-1xl sm:text-2xl">{question.question}</p>
       <ResultForm question={question} />
     </section>

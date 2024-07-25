@@ -1,6 +1,9 @@
 .questionContainer {
   padding: 16px;
-  background-color: rgba(#3f3f3f, 0.3);
+
+  textarea {
+    background-color: rebeccapurple;
+  }
 
   button.correct {
     background-color: #22c55e;

@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
+import { IconCircleDashed, IconCircleDashedCheck } from "@tabler/icons-react";
 import styles from "../styles/questionForm.module.scss";
 import { shuffle, classnames } from "../utils";
 
@@ -16,7 +18,8 @@ export function ResultForm({ question }) {
     return () => {};
   }, []);
 
-  const onClickOption = (a) => () => {
+  const onClickOption = (a) => {
+    console.log(a);
     const selectedOption = selectedOptions.find((o) => o.value === a);
     if (selectedOption) {
       const updatedList = selectedOptions.filter((o) => o.value !== a);
@@ -40,9 +43,11 @@ export function ResultForm({ question }) {
     const isCorrect = correctAnswers === answerCount;
     try {
       if (isCorrect) {
+        toast.success("Respues correcta!");
         setIsCorrectAnswers(correctAnswers === answerCount);
         // await axios.put(`/api/questions/is-correct/${question._id}`);
       } else {
+        toast.error("Intenta nuevamente");
         setTimeout(() => {
           setSelectedOptions([]);
           setCorrectAnswers(0);
@@ -65,22 +70,18 @@ export function ResultForm({ question }) {
         {shuffle(question.answers).map((a) => {
           const option = selectedOptions.find((o) => o.value === a);
           return (
-            <button
-              key={`Question_${a}`}
-              className={classnames(
-                "rounded button",
-                option?.isSelected ? styles.active : null
-              )}
-              onClick={onClickOption(a)}
-            >
-              {a.replace("__a", "")}
-            </button>
+            <AnswerItem
+              key={`Question_${a}_${question._id}`}
+              option={option}
+              answer={a}
+              onClick={onClickOption}
+            />
           );
         })}
       </div>
       <button
         className={classnames(
-          "button text-center bg-indigo-500 text-gray-900 rounded w-full mt-3",
+          "button text-center bg-[#e7ebee] text-[#252627] rounded w-full mt-3",
           validated
             ? isCorrectAnswers
               ? styles.correct
@@ -92,9 +93,9 @@ export function ResultForm({ question }) {
         Comprobar
       </button>
       <button
-        className={classnames(
-          "button text-center bg-blue-700 text-white rounded w-full mt-3"
-        )}
+        className={
+          "underline text-center w-full text-gray-500 font-normal text-sm mt-2"
+        }
         onClick={onToggleExplanation}
       >
         Explicación ({showExplanation ? "Ocultar" : "Mostrar"})
@@ -105,3 +106,27 @@ export function ResultForm({ question }) {
     </>
   );
 }
+
+const AnswerItem = ({ answer, option, onClick }) => {
+  console.log(option);
+  const onClickOption = () => {
+    onClick(answer);
+  };
+
+  return (
+    <div
+      className={classnames(
+        option?.isSelected ? styles.active : null,
+        styles.answerButton
+      )}
+      onClick={onClickOption}
+    >
+      {!option?.isSelected ? (
+        <IconCircleDashed />
+      ) : (
+        <IconCircleDashedCheck color="#5dca9e" />
+      )}
+      <p>{answer.replace("__a", "")}</p>
+    </div>
+  );
+};

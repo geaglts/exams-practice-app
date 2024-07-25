@@ -32,7 +32,7 @@ export function ExamItem({ item }) {
           <button className="hover:text-pastel-purple" onClick={copyExamLink}>
             <IconLink />
           </button>
-          <a target="_blank" href={`/exam/${item._id}`}>
+          <a href={`/exam/${item._id}`}>
             <IconTextCaption className="hover:text-pastel-purple" />
           </a>
         </div>
