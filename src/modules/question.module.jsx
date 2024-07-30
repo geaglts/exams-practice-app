@@ -13,7 +13,7 @@ import { Toggle } from "../components/Toggle.jsx";
 import { Input, TextArea } from "../components/Input.jsx";
 import { Button } from "../components/Button.jsx";
 
-import { generateQuestions, readTxt, classnames } from "../utils";
+import { generateQuestions, readTxt, classnames, shuffle } from "../utils";
 
 import styles from "../styles/question.module.scss";
 
@@ -98,7 +98,7 @@ export function NewQuestionForm({ examId, show, reload }) {
 export function QuestionCards({ data }) {
   return (
     <section className="flex flex-col gap-3">
-      {data.map((q, index) => (
+      {shuffle(data).map((q, index) => (
         <QuestionCard question={q} index={index} key={q._id} />
       ))}
     </section>
