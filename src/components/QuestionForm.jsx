@@ -37,6 +37,7 @@ export function ResultForm({ question }) {
 
   const onClickValidate = async () => {
     setValidated(true);
+
     const correctAnswers = selectedOptions.filter((q) => q.isCorrect).length;
     const isCorrect = correctAnswers === answerCount;
     try {
@@ -105,7 +106,6 @@ export function ResultForm({ question }) {
 }
 
 const AnswerItem = ({ answer, option, onClick }) => {
-  console.log(option);
   const onClickOption = () => {
     onClick(answer);
   };

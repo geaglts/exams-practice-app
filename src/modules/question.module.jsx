@@ -1,15 +1,25 @@
 import { useState } from "react";
-import { IconSquareRoundedMinus } from "@tabler/icons-react";
+import {
+  IconSquareRoundedMinus,
+  IconQuestionMark,
+  IconMessage2Question,
+} from "@tabler/icons-react";
+
 import { useGlobalContext } from "../hooks/useGlobalContext";
 import questionService from "../services/question";
-import { ResultForm } from "../components/QuestionForm.jsx";
 
-import styles from "../styles/question.module.scss";
+import { ResultForm } from "../components/QuestionForm.jsx";
+import { Toggle } from "../components/Toggle.jsx";
+import { Input, TextArea } from "../components/Input.jsx";
+import { Button } from "../components/Button.jsx";
 
 import { generateQuestions, readTxt, classnames } from "../utils";
 
+import styles from "../styles/question.module.scss";
+
 export function NewQuestionForm({ examId, show, reload }) {
   const { changeModalStatus } = useGlobalContext();
+  const [showSingleQuestion, setShowSingleQuestion] = useState(true);
   const [questionsText, setQuestions] = useState("");
 
   const closeModal = () => {
@@ -40,6 +50,10 @@ export function NewQuestionForm({ examId, show, reload }) {
     setQuestions(evt.target.value);
   };
 
+  const onToggle = (isActive) => {
+    setShowSingleQuestion(!isActive);
+  };
+
   if (!show) return null;
 
   return (
@@ -51,24 +65,32 @@ export function NewQuestionForm({ examId, show, reload }) {
           estar separada por <span className="underline">@-@</span>
         </p>
       </div>
-      <form className="flex flex-col gap-2" onSubmit={submitRequest}>
-        <div className={"text-white gap-2 grid grid-cols-[1fr_auto]"}>
-          <button className="button bg-pastel-purple rounded w-full">
-            Agregar
-          </button>
-          <button onClick={closeModal}>
-            <IconSquareRoundedMinus color="#fa5757" />
-          </button>
-        </div>
-        <input type="file" name="fileIn" onChange={onLoadFile} accept=".txt" />
-        <textarea
-          name="questionsTa"
-          placeholder="Ingresa tus preguntas aqui"
-          className="p-3 rounded h-72 resize-none"
-          value={questionsText}
-          onChange={onChangeQuestions}
-        ></textarea>
-      </form>
+      <Toggle label="Quiero agregar varias a la vez" callback={onToggle}>
+        <form className="flex flex-col gap-2" onSubmit={submitRequest}>
+          <div className={"text-white gap-2 grid grid-cols-[1fr_auto]"}>
+            <button className="button bg-pastel-purple rounded w-full">
+              Agregar
+            </button>
+            <button onClick={closeModal}>
+              <IconSquareRoundedMinus color="#fa5757" />
+            </button>
+          </div>
+          <input
+            type="file"
+            name="fileIn"
+            onChange={onLoadFile}
+            accept=".txt"
+          />
+          <textarea
+            name="questionsTa"
+            placeholder="Ingresa tus preguntas aqui"
+            className="p-3 rounded h-72 resize-none"
+            value={questionsText}
+            onChange={onChangeQuestions}
+          ></textarea>
+        </form>
+      </Toggle>
+      {showSingleQuestion && <SingleQuestionForm />}
     </section>
   );
 }
@@ -94,5 +116,33 @@ function QuestionCard({ question }) {
       <p className="text-1xl sm:text-2xl">{question.question}</p>
       <ResultForm question={question} />
     </section>
+  );
+}
+
+function SingleQuestionForm() {
+  return (
+    <form className="flex flex-col gap-3">
+      <Input
+        placeholder="Cuál es la pregunta?"
+        type="text"
+        name="question"
+        Icon={IconQuestionMark}
+        customStyles={["!bg-[#fafafa]"]}
+      />
+      <TextArea
+        placeholder="Cuáles son las posibles respuestas?"
+        name="answers"
+        rows={7}
+        customStyles={["!bg-[#fafafa]"]}
+      />
+      <Input
+        placeholder="Pon una breve explicación de la respuesta"
+        type="text"
+        name="explanation"
+        Icon={IconMessage2Question}
+        customStyles={["!bg-[#fafafa]"]}
+      />
+      <Button>Agregar</Button>
+    </form>
   );
 }

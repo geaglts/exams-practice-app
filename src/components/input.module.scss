@@ -1,4 +1,10 @@
-.container {
+._input {
+  background-color: transparent;
+  color: #1a1a1a;
+  outline: none;
+}
+
+.input {
   background-color: #f6f7f9;
   display: grid;
   grid-template-columns: auto 1fr;
@@ -18,9 +24,19 @@
     border-radius: 12px;
   }
 
-  .input {
-    background-color: transparent;
-    color: #1a1a1a;
-    outline: none;
+  .input_form {
+    @extend ._input;
+  }
+}
+
+.textarea {
+  @extend ._input;
+  border-radius: 4px;
+  background-color: #f6f7f9;
+  padding: 8px 12px;
+  resize: none;
+
+  &:hover {
+    outline: dotted 4px #0000003f;
   }
 }

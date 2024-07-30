@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { Input } from "./Input";
 
-export function Toggle({ label = "Label", children }) {
-  const [isPublic, setIsPublic] = useState(false);
+export function Toggle({ label = "Label", children, callback }) {
+  const [showContent, setShowContent] = useState(false);
+
+  const onToggle = () => {
+    const newStatus = !showContent;
+    setShowContent(newStatus);
+    callback(newStatus);
+  };
 
   return (
     <div className="flex flex-col gap-2">
@@ -14,24 +19,24 @@ export function Toggle({ label = "Label", children }) {
           type="checkbox"
           className="hidden"
           name="isPublic"
-          checked={isPublic}
-          onChange={() => setIsPublic(!isPublic)}
+          checked={showContent}
+          onChange={onToggle}
         />
         <div className="relative">
           <div
             className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer ${
-              isPublic ? "bg-pastel-purple" : "bg-gray-300"
+              showContent ? "bg-pastel-purple" : "bg-gray-300"
             }`}
           >
             <div
               className={`w-4 h-4 rounded-full shadow-md transform ${
-                isPublic ? "translate-x-6 bg-white" : "bg-white"
+                showContent ? "translate-x-6 bg-white" : "bg-white"
               }`}
             ></div>
           </div>
         </div>
       </label>
-      {isPublic && children}
+      {showContent && children}
     </div>
   );
 }
