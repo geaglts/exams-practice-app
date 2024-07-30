@@ -7,7 +7,6 @@ import { shuffle, classnames } from "../utils";
 export function ResultForm({ question }) {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [answerCount, setAnswerCount] = useState(1);
-  const [correctAnswers, setCorrectAnswers] = useState(0);
   const [validated, setValidated] = useState(question.isCorrect);
   const [isCorrectAnswers, setIsCorrectAnswers] = useState(question.isCorrect);
   const [showExplanation, setShowExplanation] = useState(false);
@@ -19,7 +18,6 @@ export function ResultForm({ question }) {
   }, []);
 
   const onClickOption = (a) => {
-    console.log(a);
     const selectedOption = selectedOptions.find((o) => o.value === a);
     if (selectedOption) {
       const updatedList = selectedOptions.filter((o) => o.value !== a);
@@ -27,7 +25,6 @@ export function ResultForm({ question }) {
     } else {
       if (answerCount > selectedOptions.length) {
         const isCorrect = a.includes("__a");
-        if (isCorrect) setCorrectAnswers(correctAnswers + 1);
         const newOption = {
           isSelected: true,
           value: a,
@@ -40,6 +37,7 @@ export function ResultForm({ question }) {
 
   const onClickValidate = async () => {
     setValidated(true);
+    const correctAnswers = selectedOptions.filter((q) => q.isCorrect).length;
     const isCorrect = correctAnswers === answerCount;
     try {
       if (isCorrect) {
@@ -50,7 +48,6 @@ export function ResultForm({ question }) {
         toast.error("Intenta nuevamente");
         setTimeout(() => {
           setSelectedOptions([]);
-          setCorrectAnswers(0);
           setIsCorrectAnswers(false);
           setValidated(false);
         }, 3000);
