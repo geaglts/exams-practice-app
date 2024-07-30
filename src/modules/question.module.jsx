@@ -4,6 +4,7 @@ import {
   IconQuestionMark,
   IconMessage2Question,
 } from "@tabler/icons-react";
+import toast from "react-hot-toast";
 
 import { useGlobalContext } from "../hooks/useGlobalContext";
 import questionService from "../services/question";
@@ -17,6 +18,8 @@ import { generateQuestions, readTxt, classnames, shuffle } from "../utils";
 
 import styles from "../styles/question.module.scss";
 
+import { questionSchemas } from "../schemas/questions.schemas.js";
+
 export function NewQuestionForm({ examId, show, reload }) {
   const { changeModalStatus } = useGlobalContext();
   const [showSingleQuestion, setShowSingleQuestion] = useState(true);
@@ -29,11 +32,27 @@ export function NewQuestionForm({ examId, show, reload }) {
 
   const submitRequest = async (evt) => {
     evt.preventDefault();
-    const questions = generateQuestions(questionsText);
-    const res = await questionService.add(examId, questions);
-    if (res.wasCreated) {
-      closeModal();
-      await reload();
+    try {
+      if (!showSingleQuestion) {
+        const questions = generateQuestions(questionsText);
+        const res = await questionService.add(examId, questions);
+        if (res.wasCreated) {
+          closeModal();
+          await reload();
+        }
+      } else {
+        const newQuestion = Object.fromEntries(new FormData(evt.target));
+        const splittedAnswers = newQuestion.answers.split(/\n|\r/gm);
+        newQuestion.answers = splittedAnswers.filter(Boolean);
+        await questionSchemas.new.validate(newQuestion);
+        const res = await questionService.add(examId, [newQuestion]);
+        if (res.wasCreated) {
+          await reload();
+          evt.target.reset();
+        }
+      }
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
@@ -65,32 +84,32 @@ export function NewQuestionForm({ examId, show, reload }) {
           estar separada por <span className="underline">@-@</span>
         </p>
       </div>
-      <Toggle label="Quiero agregar varias a la vez" callback={onToggle}>
-        <form className="flex flex-col gap-2" onSubmit={submitRequest}>
-          <div className={"text-white gap-2 grid grid-cols-[1fr_auto]"}>
-            <button className="button bg-pastel-purple rounded w-full">
-              Agregar
-            </button>
-            <button onClick={closeModal}>
-              <IconSquareRoundedMinus color="#fa5757" />
-            </button>
-          </div>
+      <form className="flex flex-col gap-3" onSubmit={submitRequest}>
+        <Toggle label="Quiero agregar varias a la vez" callback={onToggle}>
           <input
             type="file"
             name="fileIn"
             onChange={onLoadFile}
             accept=".txt"
           />
-          <textarea
+          <TextArea
             name="questionsTa"
             placeholder="Ingresa tus preguntas aqui"
-            className="p-3 rounded h-72 resize-none"
             value={questionsText}
             onChange={onChangeQuestions}
-          ></textarea>
-        </form>
-      </Toggle>
-      {showSingleQuestion && <SingleQuestionForm />}
+            rows={7}
+          />
+        </Toggle>
+        {showSingleQuestion && (
+          <SingleQuestionForm examId={examId} reload={reload} />
+        )}
+        <div className={"text-white gap-2 grid grid-cols-[1fr_auto]"}>
+          <Button>Agregar</Button>
+          <button onClick={closeModal}>
+            <IconSquareRoundedMinus color="#fa5757" />
+          </button>
+        </div>
+      </form>
     </section>
   );
 }
@@ -121,7 +140,7 @@ function QuestionCard({ question }) {
 
 function SingleQuestionForm() {
   return (
-    <form className="flex flex-col gap-3">
+    <>
       <Input
         placeholder="Cuál es la pregunta?"
         type="text"
@@ -129,8 +148,13 @@ function SingleQuestionForm() {
         Icon={IconQuestionMark}
         customStyles={["!bg-[#fafafa]"]}
       />
+      <p className="legend">
+        Cada respuestas debe estar en una linea, la/s respuesta/s correctas
+        deberan terminar con "doble guion bajo y una 'a'" por ejemplo
+        respuesa__a
+      </p>
       <TextArea
-        placeholder="Cuáles son las posibles respuestas?"
+        placeholder="Coloca las respuestas correctas y las incorrectas"
         name="answers"
         rows={7}
         customStyles={["!bg-[#fafafa]"]}
@@ -138,11 +162,10 @@ function SingleQuestionForm() {
       <Input
         placeholder="Pon una breve explicación de la respuesta"
         type="text"
-        name="explanation"
+        name="explanations"
         Icon={IconMessage2Question}
         customStyles={["!bg-[#fafafa]"]}
       />
-      <Button>Agregar</Button>
-    </form>
+    </>
   );
 }
