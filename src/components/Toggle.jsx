@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export function Toggle({ label = "Label", children, callback }) {
+export function Toggle({ label = "Label", children, callback = () => {} }) {
   const [showContent, setShowContent] = useState(false);
 
   const onToggle = () => {

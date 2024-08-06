@@ -23,6 +23,7 @@ import { questionSchemas } from "../schemas/questions.schemas.js";
 export function NewQuestionForm({ examId, show, reload }) {
   const { changeModalStatus } = useGlobalContext();
   const [showSingleQuestion, setShowSingleQuestion] = useState(true);
+  const [isMultipleChoice, setIsMultipleChoice] = useState(false);
   const [questionsText, setQuestions] = useState("");
 
   const closeModal = () => {
@@ -42,8 +43,11 @@ export function NewQuestionForm({ examId, show, reload }) {
         }
       } else {
         const newQuestion = Object.fromEntries(new FormData(evt.target));
-        const splittedAnswers = newQuestion.answers.split(/\n|\r/gm);
-        newQuestion.answers = splittedAnswers.filter(Boolean);
+        if (newQuestion.answers) {
+          const splittedAnswers = newQuestion.answers.split(/\n|\r/gm);
+          newQuestion.answers = splittedAnswers.filter(Boolean);
+        }
+        newQuestion.isOpenAnswer = isMultipleChoice;
         await questionSchemas.new.validate(newQuestion);
         const res = await questionService.add(examId, [newQuestion]);
         if (res.wasCreated) {
@@ -73,19 +77,23 @@ export function NewQuestionForm({ examId, show, reload }) {
     setShowSingleQuestion(!isActive);
   };
 
+  const onToggleMultipleOptions = (isActive) => {
+    setIsMultipleChoice(!isActive);
+  };
+
   if (!show) return null;
 
   return (
     <section className="flex flex-col gap-2 bg-slate-100 p-3 rounded text-black mt-2">
       <div>
         <h1 className="text-xl font-semibold">Nuevas Preguntas</h1>
-        <p className="text-sm text-gray-400">
-          Coloca aqui tus nuevas preguntas, recuerda que cada pregunta debe
-          estar separada por <span className="underline">@-@</span>
-        </p>
       </div>
       <form className="flex flex-col gap-3" onSubmit={submitRequest}>
         <Toggle label="Quiero agregar varias a la vez" callback={onToggle}>
+          <p className="text-sm text-gray-400">
+            Coloca aqui tus nuevas preguntas, recuerda que cada pregunta debe
+            estar separada por <span className="underline">@-@</span>
+          </p>
           <input
             type="file"
             name="fileIn"
@@ -101,7 +109,11 @@ export function NewQuestionForm({ examId, show, reload }) {
           />
         </Toggle>
         {showSingleQuestion && (
-          <SingleQuestionForm examId={examId} reload={reload} />
+          <SingleQuestionForm
+            examId={examId}
+            reload={reload}
+            toggleIsMultiple={onToggleMultipleOptions}
+          />
         )}
         <div className={"text-white gap-2 grid grid-cols-[1fr_auto]"}>
           <Button>Agregar</Button>
@@ -171,7 +183,7 @@ function OpenAnswerForm({ question }) {
   );
 }
 
-function SingleQuestionForm() {
+function SingleQuestionForm({ toggleIsMultiple }) {
   return (
     <>
       <Input
@@ -181,17 +193,6 @@ function SingleQuestionForm() {
         Icon={IconQuestionMark}
         customStyles={["!bg-[#fafafa]"]}
       />
-      <p className="legend">
-        Cada respuestas debe estar en una linea, la/s respuesta/s correctas
-        deberan terminar con "doble guion bajo y una 'a'" por ejemplo
-        respuesa__a
-      </p>
-      <TextArea
-        placeholder="Coloca las respuestas correctas y las incorrectas"
-        name="answers"
-        rows={7}
-        customStyles={["!bg-[#fafafa]"]}
-      />
       <Input
         placeholder="Pon una breve explicación de la respuesta"
         type="text"
@@ -199,6 +200,19 @@ function SingleQuestionForm() {
         Icon={IconMessage2Question}
         customStyles={["!bg-[#fafafa]"]}
       />
+      <Toggle label="Es de opción multiple" callback={toggleIsMultiple}>
+        <p className="legend">
+          Cada respuestas debe estar en una linea, la/s respuesta/s correctas
+          deberan terminar con "doble guion bajo y una 'a'" por ejemplo
+          respuesa__a
+        </p>
+        <TextArea
+          placeholder="Coloca las respuestas correctas y las incorrectas"
+          name="answers"
+          rows={7}
+          customStyles={["!bg-[#fafafa]"]}
+        />
+      </Toggle>
     </>
   );
 }
