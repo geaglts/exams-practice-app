@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   IconSquareRoundedMinus,
   IconQuestionMark,
   IconMessage2Question,
 } from "@tabler/icons-react";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 import { useGlobalContext } from "../hooks/useGlobalContext";
 import questionService from "../services/question";
@@ -133,8 +133,41 @@ function QuestionCard({ question }) {
       )}
     >
       <p className="text-1xl sm:text-2xl">{question.question}</p>
-      <ResultForm question={question} />
+      {!question?.isOpenAnswer && <ResultForm question={question} />}
+      {question?.isOpenAnswer && <OpenAnswerForm question={question} />}
     </section>
+  );
+}
+
+function OpenAnswerForm({ question }) {
+  const [showAnswer, setShowAnswer] = useState(false);
+  const inputRef = useRef(null);
+
+  const onValidateAnswer = () => {
+    if (inputRef.current.value.length > 0) {
+      setShowAnswer(true);
+    } else {
+      toast.error("Debes poner una respuesta");
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-4 mt-3">
+      <Input placeholder="Cual es la respuesta?" ref={inputRef} />
+      <Button type={"button"} onClick={onValidateAnswer}>
+        Comprobar
+      </Button>
+      {showAnswer && (
+        <div>
+          <p className="text-center text-gray-500">
+            <i>La respuesta correcta es:</i>
+          </p>
+          <p className="text-sm text-center text-gray-500">
+            {question.explanations}
+          </p>
+        </div>
+      )}
+    </div>
   );
 }
 
