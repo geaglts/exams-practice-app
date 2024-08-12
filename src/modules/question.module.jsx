@@ -23,7 +23,7 @@ import { questionSchemas } from "../schemas/questions.schemas.js";
 export function NewQuestionForm({ examId, show, reload }) {
   const { changeModalStatus } = useGlobalContext();
   const [showSingleQuestion, setShowSingleQuestion] = useState(true);
-  const [isMultipleChoice, setIsMultipleChoice] = useState(false);
+  const [isMultipleChoice, setIsMultipleChoice] = useState(true);
   const [questionsText, setQuestions] = useState("");
 
   const closeModal = () => {
@@ -51,8 +51,11 @@ export function NewQuestionForm({ examId, show, reload }) {
         await questionSchemas.new.validate(newQuestion);
         const res = await questionService.add(examId, [newQuestion]);
         if (res.wasCreated) {
-          await reload();
           evt.target.reset();
+          setShowSingleQuestion(true);
+          setIsMultipleChoice(false);
+          setQuestions("");
+          await reload();
         }
       }
     } catch (error) {
