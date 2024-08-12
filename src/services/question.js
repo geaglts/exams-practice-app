@@ -21,6 +21,19 @@ const questionService = {
       console.log(error);
     }
   },
+  async update(questionId, data) {
+    try {
+      const request = axios.put(`${endpoint}/${questionId}`, data);
+      await toast.promise(request, {
+        loading: "Procesando",
+        success: () => "Actualizado correctamente",
+        error: "Ocurrió un error!",
+      });
+      return { wasCreated: true };
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
 
 export default questionService;

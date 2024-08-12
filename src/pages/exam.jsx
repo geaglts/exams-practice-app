@@ -17,12 +17,15 @@ export function Exam() {
   const [searchParam] = useSearchParams();
   const [cookies] = useCookies(["token"]);
   const [exam, setExam] = useState(null);
-  const { changeModalStatus, modals } = useGlobalContext();
+  const { changeModalStatus, modals, configAuth } = useGlobalContext();
 
   const loadExam = async () => {
     const key = `key=${searchParam.get("key")?.replaceAll(" ", "%20")}`;
     if (cookies.token) {
       axios.defaults.headers["authorization"] = "Bearer " + cookies.token;
+      configAuth(true);
+    } else {
+      configAuth(false);
     }
     const examData = await examService.getOne(examId, [key]);
     if (examData.statusCode === 403) {
@@ -76,7 +79,7 @@ export function Exam() {
           <h3 className="my-2 text-gray-300 text-center font-semibold text-sm">
             <i>Esta son las preguntas de tu examen</i>
           </h3>
-          <QuestionCards data={exam.questions} />
+          <QuestionCards data={exam.questions} reload={loadExam} />
         </>
       )}
     </main>

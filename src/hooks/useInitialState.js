@@ -10,6 +10,7 @@ export const initialState = {
     newQuestion: false,
     config: false,
   },
+  isAuth: false,
 };
 
 export const stateReducer = (state, action) => {
@@ -25,6 +26,9 @@ export const stateReducer = (state, action) => {
     }
     case "RESET_ALL_MODALS": {
       return { ...state, modals: initialState.modals };
+    }
+    case "SET_AUTH": {
+      return { ...state, isAuth: payload };
     }
     default:
       throw new Error(`No case for type ${type} found in shopReducer.`);
@@ -45,11 +49,15 @@ export function useInitialState() {
     dispatch({ type: "TOGGLE_MODAL", payload: { name: modal, value: status } });
   };
 
+  const configAuth = (status) => {
+    dispatch({ type: "SET_AUTH", payload: status });
+  };
+
   const logout = () => {
     dispatch({ type: "RESET_ALL_MODALS" });
     removeCookie("token");
     navigate("/");
   };
 
-  return { ...state, loadExams, logout, changeModalStatus };
+  return { ...state, loadExams, logout, changeModalStatus, configAuth };
 }

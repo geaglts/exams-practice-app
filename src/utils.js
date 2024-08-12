@@ -60,3 +60,11 @@ export const getQueryParams = (keys, obj) => {
   }
   return "";
 };
+
+export function removeFromJson(data, valuesToRemove) {
+  const cleanedData = { ...data };
+  for (const value of valuesToRemove.split(",")) {
+    delete cleanedData[value];
+  }
+  return cleanedData;
+}

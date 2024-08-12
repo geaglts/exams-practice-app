@@ -22,6 +22,9 @@
     color: #9d9fe6;
     padding: 8px;
     border-radius: 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
   }
 
   .input_form {
@@ -35,6 +38,7 @@
   background-color: #f6f7f9;
   padding: 8px 12px;
   resize: none;
+  width: 100%;
 
   &:hover {
     outline: dotted 4px #0000003f;

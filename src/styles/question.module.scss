@@ -1,8 +1,7 @@
 .questionContainer {
   padding: 16px;
 
-  textarea {
-    background-color: rebeccapurple;
+  & > textarea {
   }
 
   button.correct {

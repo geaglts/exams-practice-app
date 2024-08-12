@@ -3,6 +3,9 @@ import {
   IconSquareRoundedMinus,
   IconQuestionMark,
   IconMessage2Question,
+  IconEditCircle,
+  IconWritingSign,
+  IconExclamationCircle,
 } from "@tabler/icons-react";
 import { toast } from "react-hot-toast";
 
@@ -14,7 +17,13 @@ import { Toggle } from "../components/Toggle.jsx";
 import { Input, TextArea } from "../components/Input.jsx";
 import { Button } from "../components/Button.jsx";
 
-import { generateQuestions, readTxt, classnames, shuffle } from "../utils";
+import {
+  generateQuestions,
+  readTxt,
+  classnames,
+  shuffle,
+  removeFromJson,
+} from "../utils";
 
 import styles from "../styles/question.module.scss";
 
@@ -129,17 +138,24 @@ export function NewQuestionForm({ examId, show, reload }) {
   );
 }
 
-export function QuestionCards({ data }) {
+export function QuestionCards({ data, reload }) {
   return (
     <section className="flex flex-col gap-3">
       {shuffle(data).map((q, index) => (
-        <QuestionCard question={q} index={index} key={q._id} />
+        <QuestionCard question={q} index={index} key={q._id} reload={reload} />
       ))}
     </section>
   );
 }
 
-function QuestionCard({ question }) {
+function QuestionCard({ question, reload }) {
+  const [isEdit, setIsEdit] = useState(false);
+  const state = useGlobalContext();
+
+  const toggleEditView = () => {
+    setIsEdit(!isEdit);
+  };
+
   return (
     <section
       className={classnames(
@@ -147,10 +163,100 @@ function QuestionCard({ question }) {
         "rounded bg-slate-100 text-slate-800 font-semibold"
       )}
     >
-      <p className="text-1xl sm:text-2xl">{question.question}</p>
-      {!question?.isOpenAnswer && <ResultForm question={question} />}
-      {question?.isOpenAnswer && <OpenAnswerForm question={question} />}
+      <div className="flex items-center justify-between">
+        <p className="text-1xl sm:text-2xl">
+          {isEdit ? "Qué deseas cambiar?" : question.question}
+        </p>
+        {!isEdit && state.isAuth && (
+          <section className="flex items-center">
+            <IconEditCircle
+              onClick={toggleEditView}
+              className="cursor-pointer"
+            />
+          </section>
+        )}
+      </div>
+      {isEdit && (
+        <UpdateQuestionForm
+          question={question}
+          toggleView={toggleEditView}
+          reload={reload}
+        />
+      )}
+      {!isEdit && !question?.isOpenAnswer && <ResultForm question={question} />}
+      {!isEdit && question?.isOpenAnswer && (
+        <OpenAnswerForm question={question} />
+      )}
     </section>
+  );
+}
+
+function UpdateQuestionForm({ question, toggleView, reload }) {
+  const [isOpenAnswer, setIsOpenAnswer] = useState(question.isOpenAnswer);
+
+  const onSubmit = async (evt) => {
+    evt.preventDefault();
+    const formData = Object.fromEntries(new FormData(evt.target));
+    const isOpenAnswer = formData.isPublic === "on";
+    formData.isOpenAnswer = isOpenAnswer;
+    if (isOpenAnswer) formData.answers = null;
+    else formData.answers = formData.answers.split("\n");
+    const parsedQuestionData = removeFromJson(
+      { ...question, ...formData },
+      "isPublic,_id,exam,__v,createdAt,updatedAt"
+    );
+    const res = await questionService.update(question._id, parsedQuestionData);
+    if (res.wasCreated) {
+      toggleView();
+      await reload();
+    }
+  };
+
+  const onChangeOpenAnswer = (status) => {
+    setIsOpenAnswer(status);
+  };
+
+  return (
+    <form onSubmit={onSubmit} className="flex flex-col gap-3 mt-3">
+      <Input
+        name="question"
+        placeholder="Pregunta"
+        defaultValue={question.question}
+        Icon={IconWritingSign}
+        label="Pregunta"
+      />
+      <Input
+        name="explanations"
+        placeholder="Explciacion"
+        defaultValue={question.explanations}
+        Icon={IconExclamationCircle}
+        label="Explicación"
+      />
+      <Toggle
+        label="Es una pregunta abierta?"
+        defaultValue={isOpenAnswer}
+        simple={true}
+        callback={onChangeOpenAnswer}
+      />
+      {!isOpenAnswer && (
+        <>
+          <label className="text-sm text-gray-400">
+            <i>Respuestas:</i>
+          </label>
+          <TextArea
+            name="answers"
+            placeholder="Respuestas"
+            defaultValue={question.answers?.join("\n")}
+          />
+        </>
+      )}
+      <div className={"mt-2 text-white gap-2 grid grid-cols-[1fr_auto]"}>
+        <Button>Actualizar</Button>
+        <button onClick={toggleView}>
+          <IconSquareRoundedMinus color="#fa5757" />
+        </button>
+      </div>
+    </form>
   );
 }
 

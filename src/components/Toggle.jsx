@@ -1,7 +1,13 @@
 import { useState } from "react";
 
-export function Toggle({ label = "Label", children, callback = () => {} }) {
-  const [showContent, setShowContent] = useState(false);
+export function Toggle({
+  label = "Label",
+  children,
+  defaultValue,
+  simple = false,
+  callback = () => {},
+}) {
+  const [showContent, setShowContent] = useState(defaultValue | false);
 
   const onToggle = () => {
     const newStatus = !showContent;
@@ -36,7 +42,7 @@ export function Toggle({ label = "Label", children, callback = () => {} }) {
           </div>
         </div>
       </label>
-      {showContent && children}
+      {!simple && showContent && children}
     </div>
   );
 }
