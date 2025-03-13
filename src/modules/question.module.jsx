@@ -302,11 +302,10 @@ function SingleQuestionForm({ toggleIsMultiple }) {
         Icon={IconQuestionMark}
         customStyles={["!bg-[#fafafa]"]}
       />
-      <Input
+      <TextArea
         placeholder="Pon una breve explicación de la respuesta"
         type="text"
         name="explanations"
-        Icon={IconMessage2Question}
         customStyles={["!bg-[#fafafa]"]}
       />
       <Toggle label="Es de opción multiple" callback={toggleIsMultiple}>
