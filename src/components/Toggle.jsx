@@ -7,7 +7,7 @@ export function Toggle({
   simple = false,
   callback = () => {},
 }) {
-  const [showContent, setShowContent] = useState(defaultValue | "");
+  const [showContent, setShowContent] = useState(defaultValue | false);
 
   const onToggle = () => {
     const newStatus = !showContent;
@@ -42,7 +42,7 @@ export function Toggle({
           </div>
         </div>
       </label>
-      {!simple && showContent && children}
+      {!simple && showContent ? children : ""}
     </div>
   );
 }
