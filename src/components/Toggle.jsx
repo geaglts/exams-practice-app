@@ -42,7 +42,7 @@ export function Toggle({
           </div>
         </div>
       </label>
-      {!simple && showContent && children}
+      {!simple ? showContent : children}
     </div>
   );
 }
