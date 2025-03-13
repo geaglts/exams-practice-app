@@ -2,7 +2,6 @@ import { useState, useRef } from "react";
 import {
   IconSquareRoundedMinus,
   IconQuestionMark,
-  IconMessage2Question,
   IconEditCircle,
   IconWritingSign,
   IconExclamationCircle,
@@ -156,6 +155,13 @@ function QuestionCard({ question, reload }) {
     setIsEdit(!isEdit);
   };
 
+  const removeQuestion = async () => {
+    const result = await questionService.remove(question._id);
+    if (result.wasDeleted) {
+      await reload();
+    }
+  };
+
   return (
     <section
       className={classnames(
@@ -168,11 +174,20 @@ function QuestionCard({ question, reload }) {
           {isEdit ? "Qué deseas cambiar?" : question.question}
         </p>
         {!isEdit && state.isAuth && (
-          <section className="flex items-center">
-            <IconEditCircle
-              onClick={toggleEditView}
-              className="cursor-pointer"
-            />
+          <section className="flex gap-1 items-center">
+            <section className="flex items-center">
+              <IconEditCircle
+                onClick={toggleEditView}
+                className="cursor-pointer"
+              />
+            </section>
+            <section className="flex items-center">
+              <IconSquareRoundedMinus
+                color="#fa5757"
+                className="cursor-pointer"
+                onClick={removeQuestion}
+              />
+            </section>
           </section>
         )}
       </div>

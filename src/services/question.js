@@ -34,6 +34,19 @@ const questionService = {
       console.log(error);
     }
   },
+  async remove(questionId) {
+    try {
+      const request = axios.delete(`${endpoint}/${questionId}`);
+      await toast.promise(request, {
+        loading: "Procesando",
+        success: () => "Eliminado correctamente",
+        error: "Ocurrió un error!",
+      });
+      return { wasDeleted: true };
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
 
 export default questionService;
