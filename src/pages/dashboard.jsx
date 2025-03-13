@@ -18,7 +18,7 @@ export function Dashboard() {
   }, []);
 
   return (
-    <main className="p-4">
+    <main className="p-4 w-[90ch] mx-auto my-0">
       <ModalComponent
         isOpen={modals.config}
         onClose={changeModalStatus("config", false)}

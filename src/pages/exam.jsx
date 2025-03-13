@@ -42,7 +42,7 @@ export function Exam() {
   if (!exam) return null;
 
   return (
-    <main className="p-4">
+    <main className="p-4 w-[90ch] mx-auto my-0">
       <div className="flex justify-center">
         <Link className="underline" to={"/dash"}>
           Mis examenes
