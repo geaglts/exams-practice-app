@@ -39,3 +39,7 @@ input.custom-input:disabled {
   font-style: italic;
   color: #9a9faa;
 }
+
+button {
+  cursor: pointer;
+}
