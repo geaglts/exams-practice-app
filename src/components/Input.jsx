@@ -3,7 +3,7 @@ import { IconLockCog } from "@tabler/icons-react";
 import { classnames } from "../utils";
 import styles from "./input.module.scss";
 
-export const Input = forwardRef(function (
+export const Input = forwardRef(function Input(
   { Icon = IconLockCog, customStyles = [], label, ...rest },
   ref
 ) {

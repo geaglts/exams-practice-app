@@ -28,7 +28,10 @@ export function Login() {
   if (cookies.token) return null;
 
   return (
-    <form onSubmit={onSubmit} className="p-4 grid gap-3">
+    <form
+      onSubmit={onSubmit}
+      className="p-4 grid gap-3 lg:w-[90ch] lg:mx-auto lg:my-0"
+    >
       <div>
         <p className="text-2xl font-semibold">Bienvenido!</p>
         <p className="text-sm text-gray-200">Es un gusto verte de regreso</p>
