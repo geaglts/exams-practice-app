@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --color-pastel-purple: #9d9fe6;
+}
+
 body {
   background-color: #121212;
   color: #fafafa;
