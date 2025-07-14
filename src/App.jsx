@@ -10,6 +10,7 @@ import { Login } from "./pages/login";
 import { Dashboard } from "./pages/dashboard";
 import { NorFound } from "./pages/notFound";
 import { Exam } from "./pages/exam";
+import { Register } from "./pages/register.jsx";
 
 export function App() {
   return (
@@ -22,6 +23,7 @@ export function App() {
             <Route element={<AuthRoute />}>
               <Route path="/dash" Component={Dashboard} />
             </Route>
+            <Route path="/register" Component={Register} />
             <Route path="/exam/:examId" Component={Exam} />
             <Route path="*" Component={NorFound} />
           </Routes>

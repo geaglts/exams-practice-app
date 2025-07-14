@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { IconUserSquareRounded, IconAsterisk } from "@tabler/icons-react";
 import { Input } from "../components/Input.jsx";
@@ -51,12 +51,12 @@ export function Login() {
       <button className="button bg-pastel-purple rounded">
         Iniciar Sesion
       </button>
-      {/* <p className="text-center">
+      <p className="text-center">
         No tienes una cuenta?{" "}
-        <a className="underline text-pastel-purple" href="/register">
+        <Link className="underline text-pastel-purple" to="/register">
           Creala Aqui
-        </a>
-      </p> */}
+        </Link>
+      </p>
     </form>
   );
 }
